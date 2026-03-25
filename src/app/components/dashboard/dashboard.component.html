@@ -1,0 +1,124 @@
+<div class="dashboard-container">
+
+  <!-- Header -->
+  <div class="dashboard-header">
+    <div class="header-left">
+      <div class="logo-mark">
+        <mat-icon>people_alt</mat-icon>
+      </div>
+      <div>
+        <h1 class="dashboard-title">User Directory</h1>
+        <p class="dashboard-subtitle">Browse and search your team</p>
+      </div>
+    </div>
+
+    <!-- Search -->
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Search by name or email</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput [formControl]="searchControl" placeholder="e.g. Leanne or gmail" id="search-input" />
+      @if (searchControl.value) {
+        <button mat-icon-button matSuffix (click)="searchControl.setValue('')" aria-label="Clear search">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+    </mat-form-field>
+  </div>
+
+  <!-- Loading -->
+  @if (loading()) {
+    <div class="loading-container">
+      <mat-spinner diameter="56" />
+      <p class="loading-text">Fetching users…</p>
+    </div>
+  }
+
+  <!-- Error -->
+  @if (errorMessage()) {
+    <div class="error-container">
+      <mat-icon class="error-icon">error_outline</mat-icon>
+      <p class="error-text">{{ errorMessage() }}</p>
+    </div>
+  }
+
+  <!-- Table -->
+  @if (!loading() && !errorMessage()) {
+    <mat-card class="table-card">
+      <div class="table-wrapper">
+        <table mat-table [dataSource]="filteredUsers()" matSort (matSortChange)="onSortChange($event)" class="users-table">
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="name">
+              <span class="col-header">
+                <mat-icon class="col-icon">person</mat-icon> Name
+              </span>
+            </th>
+            <td mat-cell *matCellDef="let user">
+              <div class="user-name-cell">
+                <div class="avatar">{{ user.name.charAt(0) }}</div>
+                <span>{{ user.name }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Email Column -->
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef>
+              <span class="col-header"><mat-icon class="col-icon">email</mat-icon> Email</span>
+            </th>
+            <td mat-cell *matCellDef="let user">
+              <a class="link-cell" [href]="'mailto:' + user.email">{{ user.email }}</a>
+            </td>
+          </ng-container>
+
+          <!-- Phone Column -->
+          <ng-container matColumnDef="phone">
+            <th mat-header-cell *matHeaderCellDef>
+              <span class="col-header"><mat-icon class="col-icon">phone</mat-icon> Phone</span>
+            </th>
+            <td mat-cell *matCellDef="let user">{{ user.phone }}</td>
+          </ng-container>
+
+          <!-- Company Column -->
+          <ng-container matColumnDef="company">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="company">
+              <span class="col-header"><mat-icon class="col-icon">business</mat-icon> Company</span>
+            </th>
+            <td mat-cell *matCellDef="let user">
+              <mat-chip class="company-chip">{{ user.company.name }}</mat-chip>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: displayedColumns"
+            class="user-row"
+            (click)="navigateToUser(row)"
+            [attr.id]="'user-row-' + row.id"
+            role="button"
+            tabindex="0"
+            (keyup.enter)="navigateToUser(row)"
+          ></tr>
+
+          <!-- No Data -->
+          <tr class="mat-row no-data-row" *matNoDataRow>
+            <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+              <div class="no-data">
+                <mat-icon>search_off</mat-icon>
+                <span>No users match your search.</span>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="table-footer">
+        <span class="result-count">
+          {{ filteredUsers().length }} result{{ filteredUsers().length !== 1 ? 's' : '' }}
+        </span>
+      </div>
+    </mat-card>
+  }
+</div>

@@ -1,0 +1,132 @@
+<div class="detail-page">
+
+  <!-- Back Button -->
+  <button mat-button class="back-btn" (click)="goBack()" id="back-button">
+    <mat-icon>arrow_back</mat-icon>
+    Back to Dashboard
+  </button>
+
+  <!-- Loading -->
+  @if (loading()) {
+    <div class="loading-container">
+      <mat-spinner diameter="56" />
+      <p class="loading-text">Loading user…</p>
+    </div>
+  }
+
+  <!-- Error -->
+  @if (errorMessage()) {
+    <div class="error-container">
+      <mat-icon class="error-icon">error_outline</mat-icon>
+      <p class="error-text">{{ errorMessage() }}</p>
+      <button mat-stroked-button (click)="goBack()">Return to Dashboard</button>
+    </div>
+  }
+
+  <!-- User Card -->
+  @if (user(); as u) {
+    <div class="detail-grid">
+
+      <!-- Hero Card -->
+      <mat-card class="hero-card">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+          <div class="big-avatar">{{ u.name.charAt(0) }}</div>
+          <h1 class="user-name">{{ u.name }}</h1>
+          <p class="username">&#64;{{ u.username }}</p>
+          <mat-chip class="website-chip">
+            <mat-icon>language</mat-icon>
+            <a [href]="'https://' + u.website" target="_blank" rel="noopener">{{ u.website }}</a>
+          </mat-chip>
+        </div>
+      </mat-card>
+
+      <!-- Info Sections -->
+      <div class="info-columns">
+
+        <!-- Contact -->
+        <mat-card class="info-card">
+          <div class="card-icon-header">
+            <mat-icon class="section-icon">contact_mail</mat-icon>
+            <h2 class="section-title">Contact</h2>
+          </div>
+          <mat-divider class="divider" />
+          <div class="info-list">
+            <div class="info-item">
+              <mat-icon class="item-icon">email</mat-icon>
+              <div>
+                <span class="item-label">Email</span>
+                <a class="item-value link" [href]="'mailto:' + u.email" id="detail-email">{{ u.email }}</a>
+              </div>
+            </div>
+            <div class="info-item">
+              <mat-icon class="item-icon">phone</mat-icon>
+              <div>
+                <span class="item-label">Phone</span>
+                <span class="item-value" id="detail-phone">{{ u.phone }}</span>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+
+        <!-- Address -->
+        <mat-card class="info-card">
+          <div class="card-icon-header">
+            <mat-icon class="section-icon">location_on</mat-icon>
+            <h2 class="section-title">Address</h2>
+          </div>
+          <mat-divider class="divider" />
+          <div class="info-list">
+            <div class="info-item">
+              <mat-icon class="item-icon">home</mat-icon>
+              <div>
+                <span class="item-label">Street</span>
+                <span class="item-value">{{ u.address.street }}, {{ u.address.suite }}</span>
+              </div>
+            </div>
+            <div class="info-item">
+              <mat-icon class="item-icon">location_city</mat-icon>
+              <div>
+                <span class="item-label">City</span>
+                <span class="item-value">{{ u.address.city }} {{ u.address.zipcode }}</span>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+
+        <!-- Company -->
+        <mat-card class="info-card company-card">
+          <div class="card-icon-header">
+            <mat-icon class="section-icon company-icon">business</mat-icon>
+            <h2 class="section-title">Company</h2>
+          </div>
+          <mat-divider class="divider" />
+          <div class="info-list">
+            <div class="info-item">
+              <mat-icon class="item-icon">apartment</mat-icon>
+              <div>
+                <span class="item-label">Name</span>
+                <span class="item-value company-name" id="detail-company">{{ u.company.name }}</span>
+              </div>
+            </div>
+            <div class="info-item">
+              <mat-icon class="item-icon">format_quote</mat-icon>
+              <div>
+                <span class="item-label">Catch Phrase</span>
+                <span class="item-value italic">"{{ u.company.catchPhrase }}"</span>
+              </div>
+            </div>
+            <div class="info-item">
+              <mat-icon class="item-icon">trending_up</mat-icon>
+              <div>
+                <span class="item-label">Business</span>
+                <span class="item-value">{{ u.company.bs }}</span>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+
+      </div>
+    </div>
+  }
+</div>

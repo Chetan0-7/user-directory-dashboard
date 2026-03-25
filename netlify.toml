@@ -1,0 +1,10 @@
+[build]
+  command   = "ng build --configuration production"
+  publish   = "dist/user-directory-dashboard/browser"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[[plugins]]
+# Explicitly disable the Netlify Angular SSR plugin — this is a pure SPA
+# Do NOT add @netlify/angular-runtime here
